@@ -1,19 +1,6 @@
 namespace CarHandler {
-    const leftFrontWheel = PCAmotor.Servos.S1;
-    const rightFrontWheel = PCAmotor.Servos.S2;
-    const leftBackWheel = PCAmotor.Servos.S3;
-    const rightBackWheel = PCAmotor.Servos.S4;
-
-    // min = 500, max = 2500
-    const lfwMap = [620, 2500];
-    const rfwMap = [600, 2500];
-    const lbwMap = [600, 2500];
-    const rbwMap = [600, 2500];
-
-    //let speed = 25; // in % , max = 100, min = -100
-
-    export function GoForward(speed: number) { Move(-speed, speed); }
-    export function Gobackward(speed: number) { Move(speed, -speed); }
+    export function GoForward(speed: number) { Move(speed, speed); }
+    export function Gobackward(speed: number) { Move(-speed, -speed); }
 
     export function WeirdMove(speed: number) {
         RightFrontWheel(speed);
@@ -23,13 +10,11 @@ namespace CarHandler {
         LeftBackWheel(-speed);
     }
 
-    export function StopAll() {
-        PCAmotor.StopServo(PCAmotor.Servos.S1);
-        PCAmotor.StopServo(PCAmotor.Servos.S2);
-        PCAmotor.StopServo(PCAmotor.Servos.S3);
-        PCAmotor.StopServo(PCAmotor.Servos.S4);
-    }
+    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left ]
 
+    export function StopAll() {
+        for (let i = 0; i < wheels.length; i++) { SetWheel(wheels[i], 0);}
+    }
 
     function Move(rSpeed: number, lSpeed: number) {
         MoveRightSide(rSpeed);
@@ -46,18 +31,9 @@ namespace CarHandler {
         RightBackWheel(speed);
     }
 
-    function GetMotorSpeed(speed: number, map: number[]): number {
-        if (map[0] < 500 || map[1] > 2500) {
-            music.playTone(99, 99999);
-            basic.pause(99999);
-        }
-
-        return Math.map(speed, -100, 100, map[0], map[1]);
-    }
-
     // ROTATION
     const defAngleTime = 1350; // how long does it take to rotate 180° at "rotateSpeed" in ms
-    const rotateSpeed = 100; // max = 100, min = -100
+    const rotateSpeed = 50; // -100 -> 100
 
     export function RotateRight(angle: number) { Rotate(angle, true); }
 
@@ -70,7 +46,7 @@ namespace CarHandler {
         basic.pause(100);
 
         let sp = right ? rotateSpeed : -rotateSpeed;
-        Move(sp, sp);
+        Move(sp, -sp);
 
         basic.pause((defAngleTime / 180) * angle);
 
@@ -83,26 +59,27 @@ namespace CarHandler {
 
     /// ---- --- WHEELS --- ---- \\\
     function RightFrontWheel(speed: number) {
-        let mSpeed = GetMotorSpeed(speed, rfwMap);
-        console.log(`right front ${mSpeed}`);
-        PCAmotor.GeekServo(rightFrontWheel, mSpeed);
+        SetWheel(LR.Upper_right, speed);
     }
 
     function LeftFrontWheel(speed: number) {
-        let mSpeed = GetMotorSpeed(speed, lfwMap);
-        console.log(`left front ${mSpeed}`);
-        PCAmotor.GeekServo(leftFrontWheel, mSpeed);
+        SetWheel(LR.Upper_left, speed);
     }
 
     function RightBackWheel(speed: number) {
-        let mSpeed = GetMotorSpeed(speed, rbwMap);
-        console.log(`right back ${mSpeed}`);
-        PCAmotor.GeekServo(rightBackWheel, mSpeed);
+        SetWheel(LR.Lower_right, speed);
     }
 
     function LeftBackWheel(speed: number) {
-        let mSpeed = GetMotorSpeed(speed, lbwMap);
-        console.log(`left back ${mSpeed}`);
-        PCAmotor.GeekServo(leftBackWheel, mSpeed);
+        SetWheel(LR.Lower_left, speed);
+    }
+
+    function SetWheel(wheel : LR, speed : number){
+        let sp = speed < 0 ? -speed : speed;
+        let forw = speed < 0 ? MD.Back : MD.Forward;
+
+        console.log(`${sp}, ${forw}`)
+
+        mecanumRobot.Motor(wheel, forw, sp);
     }
 }
