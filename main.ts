@@ -3,6 +3,7 @@ const rightFrontWheel = PCAmotor.Servos.S2;
 const leftBackWheel = PCAmotor.Servos.S3;
 const rightBackWheel = PCAmotor.Servos.S4;
 
+// ?
 // min = 500, max = 2500
 const lfwMap = [620, 2500];
 const rfwMap = [600, 2500];
