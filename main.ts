@@ -2,18 +2,18 @@
 
 
 
-
-input.onButtonPressed(Button.A, function ()
+/*input.onButtonPressed(Button.A, function ()
 {    
-    CarHandler.WeirdMove(20);
+    Test();
+})*/
 
-    //Test();
-})
+/*input.onButtonPressed(Button.B, function () {
+    CarHandler.LeftTurn(30, 1.5);
 
-input.onButtonPressed(Button.B, function () {
-    CarHandler.RotateRight(90);
-    CarHandler.RotateLeft(90);
-})
+    //CarHandler.GoForward(20);
+
+    //CarHandler.GoForward(20);
+})*/
 
 input.onButtonPressed(Button.AB, function(){
     CarHandler.StopAll();
@@ -21,15 +21,15 @@ input.onButtonPressed(Button.AB, function(){
 
 function Test() {
     // -100 -> 100
-    let sp = 80;
+    let sp = 30;
 
     CarHandler.GoForward(sp);
     basic.pause(2500);
 
-    CarHandler.RightTurn(sp);
+    CarHandler.RightTurn(sp, 2);
     basic.pause(2500);
 
-    CarHandler.LeftTurn(sp);
+    CarHandler.LeftTurn(sp, 2);
     basic.pause(2500);
 
     CarHandler.StopAll();

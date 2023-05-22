@@ -10,8 +10,6 @@ namespace CarHandler {
         LeftBackWheel(-speed);
     }
 
-    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left ]
-
     export function StopAll() {
         for (let i = 0; i < wheels.length; i++) { SetWheel(wheels[i], 0);}
     }
@@ -31,8 +29,12 @@ namespace CarHandler {
         RightBackWheel(speed);
     }
 
+    export function Test(){
+        MoveRightSide(50);
+    }
+
     // ROTATION
-    const defAngleTime = 1350; // how long does it take to rotate 180° at "rotateSpeed" in ms
+    const defAngleTime = 1150; // how long does it take to rotate 180° at "rotateSpeed" in ms
     const rotateSpeed = 50; // -100 -> 100
 
     export function RotateRight(angle: number) { Rotate(angle, true); }
@@ -53,32 +55,31 @@ namespace CarHandler {
         StopAll();
     }
 
-    export function RightTurn(speed: number) { Move(-speed / 2, speed); }
-    export function LeftTurn(speed: number) { Move(-speed, speed / 2); }
+    /**
+      * Higher force = lower force xDDD
+    */
+    export function RightTurn(speed: number, turnForce: number) { Move(speed / turnForce, speed); }
+
+    /**
+      * Higher force = lower force xDDD
+    */
+    export function LeftTurn(speed: number, turnForce: number) { Move(speed, speed / turnForce); }
 
 
     /// ---- --- WHEELS --- ---- \\\
-    function RightFrontWheel(speed: number) {
-        SetWheel(LR.Upper_right, speed);
-    }
+    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left]
 
-    function LeftFrontWheel(speed: number) {
-        SetWheel(LR.Upper_left, speed);
-    }
-
-    function RightBackWheel(speed: number) {
-        SetWheel(LR.Lower_right, speed);
-    }
-
-    function LeftBackWheel(speed: number) {
-        SetWheel(LR.Lower_left, speed);
-    }
+    function RightFrontWheel(speed: number) { SetWheel(wheels[0], speed); }
+    function LeftFrontWheel(speed: number) { SetWheel(wheels[1], speed); }
+    
+    function RightBackWheel(speed: number) { SetWheel(wheels[2], speed); }
+    function LeftBackWheel(speed: number) { SetWheel(wheels[3], speed); }
 
     function SetWheel(wheel : LR, speed : number){
         let sp = speed < 0 ? -speed : speed;
         let forw = speed < 0 ? MD.Back : MD.Forward;
 
-        console.log(`${sp}, ${forw}`)
+        console.log(`${wheel}: ${sp}, ${forw}`)
 
         mecanumRobot.Motor(wheel, forw, sp);
     }
