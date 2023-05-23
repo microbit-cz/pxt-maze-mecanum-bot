@@ -5,6 +5,8 @@
 // - Wall in front: Rotate right (if right side is clear, otherwise left) (until clear ?)
 // - If left wall is null: Correct by sligth left turn
 
+// if fl ---> right correction
+
 let leftSensor = DigitalPin.P0;
 let rightSensor = DigitalPin.P13;
 let frontRightSensor = DigitalPin.P12;
@@ -21,12 +23,19 @@ const minWallDist = 10;
 
 let solve = false;
 
+mecanumRobot.setServo(90);
+
 input.onButtonPressed(Button.A, function () {
+    //CarHandler.Test();
     solve = !solve;
+
+    //console.log(GetLeftWallDistance());
 })
 
 // TO DO: use fl & fr sensors
 basic.forever(function() {
+    //return;
+
     if(!solve){
         CarHandler.StopAll();
         return;
@@ -39,7 +48,7 @@ basic.forever(function() {
 
     let fDist = mecanumRobot.ultra();
 
-    console.log(`${l}, ${fl}, ${fr}, ${r}, ${fDist}`);
+    //console.log(`${l}, ${fl}, ${fr}, ${r}, ${fDist}`);
 
     let speed = 30;
 
@@ -50,17 +59,32 @@ basic.forever(function() {
 
         CarHandler.StopAll();
 
-        if (!l) CarHandler.RotateLeft(90);
-        else CarHandler.RotateRight(90);
+        if (l || fl) CarHandler.RotateRight(45);
+        else CarHandler.RotateLeft(45);
 
         f = false;
     }
     else{
         if (!l) {
             console.log("left turn");
-            CarHandler.LeftTurn(speed, 1.5);
+            CarHandler.LeftTurn(speed, 2);
 
             f = false;
+        }
+
+        if(fl){
+            console.log("left turn");
+            CarHandler.RightTurn(speed, 2);
+
+            f = false;
+        }
+
+        if(!fl && !l){
+            if(GetLeftWallDistance() > 12){
+                CarHandler.RotateLeft(45);
+            }
+
+            console.log(`Get distance: ${GetLeftWallDistance()}`);
         }
     }
 
@@ -70,3 +94,17 @@ basic.forever(function() {
     }
 })
 
+const turnTime = 250;
+
+function GetLeftWallDistance() : number{
+    mecanumRobot.setServo(170);
+
+    basic.pause(turnTime);
+    let fDist = mecanumRobot.ultra();
+
+    mecanumRobot.setServo(90);
+
+    basic.pause(turnTime);
+
+    return fDist;
+}
