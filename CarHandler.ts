@@ -30,32 +30,15 @@ namespace CarHandler {
     }
 
     export function Test(){
-
-        CarHandler.RotateRight(90);
-
-        //for (let i = 0; i < 4; i++) TestWheel(wheels[i]);
-
-
-        //console.log("Test");
-
-        //mecanumRobot.Motor(LR.Upper_right, MD.Forward, 50);
-        /*basic.pause(1000);
-        mecanumRobot.Motor(LR.Upper_right, MD.Back, 100);
-        basic.pause(1000);
-        mecanumRobot.Motor(LR.Upper_right, MD.Forward, 100);
-        basic.pause(1000);
-        mecanumRobot.Motor(LR.Upper_right, MD.Back, 100);
-        basic.pause(1000);
-        mecanumRobot.Motor(LR.Upper_right, MD.Forward, 100);
-        basic.pause(1000);
-        mecanumRobot.Motor(LR.Upper_right, MD.Back, 100);*/
+        TestWheel(wheels[1]);
+        TestWheel(wheels[0]);
     }
 
     function TestWheel(wheel : LR){
         console.log(wheel);
 
         for (let i = 0; i < 8; i++) {
-            let sp = i % 2 == 0 ? 80 : - 80;
+            let sp = i % 2 == 0 ? 50 : - 50;
             SetWheel(wheel, sp);
             basic.pause(500);
         }
@@ -100,7 +83,7 @@ namespace CarHandler {
     let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left]
 
     function RightFrontWheel(speed: number){
-        if (speed < 0) speed = 0; // this wheel can't spin back for some reason (if it does it won't go forward without help :( )
+        //if (speed < 0) speed = 0; // this wheel can't spin back for some reason (if it does it won't go forward without help :( )
 
         SetWheel(wheels[0], speed);
     }

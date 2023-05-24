@@ -27,14 +27,20 @@ mecanumRobot.setServo(90);
 
 input.onButtonPressed(Button.A, function () {
     //CarHandler.Test();
-    solve = !solve;
-
+    //solve = !solve;
+ 
     //console.log(GetLeftWallDistance());
+
+    //mecanumRobot.setServo(180);
+
+    CarHandler.Test();
+
+    //mecanumRobot.Motor(LR.Upper_left, MD.Forward, 50);
 })
 
 // TO DO: use fl & fr sensors
 basic.forever(function() {
-    //return;
+    return;
 
     if(!solve){
         CarHandler.StopAll();
@@ -74,7 +80,9 @@ basic.forever(function() {
 
         if(fl){
             console.log("left turn");
-            CarHandler.RightTurn(speed, 2);
+            CarHandler.RightTurn(speed, 4);
+
+            //CarHandler.RotateRight(10)
 
             f = false;
         }
@@ -98,6 +106,19 @@ const turnTime = 250;
 
 function GetLeftWallDistance() : number{
     mecanumRobot.setServo(170);
+
+    basic.pause(turnTime);
+    let fDist = mecanumRobot.ultra();
+
+    mecanumRobot.setServo(90);
+
+    basic.pause(turnTime);
+
+    return fDist;
+}
+
+function GetLeftFrontDistance(): number {
+    mecanumRobot.setServo(130);
 
     basic.pause(turnTime);
     let fDist = mecanumRobot.ultra();
