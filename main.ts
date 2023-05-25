@@ -16,7 +16,7 @@
 })*/
 
 input.onButtonPressed(Button.AB, function(){
-    CarHandler.StopAll();
+    CarHandler.StopCar();
 })
 
 function Test() {
@@ -32,7 +32,7 @@ function Test() {
     CarHandler.LeftTurn(sp, 2);
     basic.pause(2500);
 
-    CarHandler.StopAll();
+    CarHandler.StopCar();
 
     CarHandler.Gobackward(sp);
     basic.pause(2500);
@@ -49,5 +49,5 @@ function Test() {
     CarHandler.GoForward(sp);
     basic.pause(1000);
 
-    CarHandler.StopAll();
+    CarHandler.StopCar();
 }

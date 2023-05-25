@@ -19,31 +19,38 @@ pins.setPull(frontLeftSensor, PinPullMode.PullNone);
 pins.setPull(frontRightSensor, PinPullMode.PullNone);
 pins.setPull(rightSensor, PinPullMode.PullNone);
 
-const minWallDist = 10;
+const minWallDist = 12;
 
 let solve = false;
+let debug = false;
 
 mecanumRobot.setServo(90);
 
 input.onButtonPressed(Button.A, function () {
-    //CarHandler.Test();
-    //solve = !solve;
- 
-    //console.log(GetLeftWallDistance());
 
-    //mecanumRobot.setServo(180);
+    if (debug){
+        CarHandler.Test();
+        return;
+    }
 
-    CarHandler.Test();
-
-    //mecanumRobot.Motor(LR.Upper_left, MD.Forward, 50);
+    solve = !solve;
 })
+
+const servoCheckCountdown = 1000; // in ms
+
+let deltaTime = 0;
+let lastTime = 0;
 
 // TO DO: use fl & fr sensors
 basic.forever(function() {
-    return;
+    let cTime = input.runningTime();
+    deltaTime = cTime - lastTime;
+    lastTime = cTime
+
+    if (debug) return;
 
     if(!solve){
-        CarHandler.StopAll();
+        CarHandler.StopCar();
         return;
     }
 
@@ -60,10 +67,12 @@ basic.forever(function() {
 
     let f = true;
 
+    let checkC = 0;
+
     if (fDist < minWallDist){
         console.log("rotate");
 
-        CarHandler.StopAll();
+        CarHandler.StopCar();
 
         if (l || fl) CarHandler.RotateRight(45);
         else CarHandler.RotateLeft(45);
@@ -88,11 +97,14 @@ basic.forever(function() {
         }
 
         if(!fl && !l){
-            if(GetLeftWallDistance() > 12){
+            let dist = GetLeftWallDistance();
+
+            if (dist > minWallDist && checkC <= 0){
                 CarHandler.RotateLeft(45);
+                checkC = servoCheckCountdown;
             }
 
-            console.log(`Get distance: ${GetLeftWallDistance()}`);
+            console.log(`Get distance: ${dist}`);
         }
     }
 
@@ -100,6 +112,8 @@ basic.forever(function() {
         console.log("Forward")
         CarHandler.GoForward(speed);
     }
+
+    checkC - deltaTime;
 })
 
 const turnTime = 250;

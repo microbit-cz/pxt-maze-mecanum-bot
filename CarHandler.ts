@@ -1,7 +1,8 @@
 namespace CarHandler {
     export function GoForward(speed: number) { Move(speed, speed); }
-    export function Gobackward(speed: number) { Move(-speed, -speed); }
+    export function Gobackward(speed: number) { GoForward(-speed); }
 
+    /** does not work with ks4031 for some reason */
     export function WeirdMove(speed: number) {
         RightFrontWheel(speed);
         RightBackWheel(-speed);
@@ -10,23 +11,17 @@ namespace CarHandler {
         LeftBackWheel(-speed);
     }
 
-    export function StopAll() {
+    export function StopCar() { Move(0, 0); }
+    /*{
         for (let i = 0; i < wheels.length; i++) { SetWheel(wheels[i], 0);}
-    }
+    }*/
 
     function Move(rSpeed: number, lSpeed: number) {
-        MoveRightSide(rSpeed);
-        MoveLeftSide(lSpeed);
-    }
+        RightFrontWheel(rSpeed);
+        RightBackWheel(rSpeed);
 
-    function MoveLeftSide(speed: number) {
-        LeftFrontWheel(speed);
-        LeftBackWheel(speed);
-    }
-
-    function MoveRightSide(speed: number) {
-        RightFrontWheel(speed);
-        RightBackWheel(speed);
+        LeftFrontWheel(lSpeed);
+        LeftBackWheel(lSpeed);
     }
 
     export function Test(){
@@ -38,7 +33,7 @@ namespace CarHandler {
         console.log(wheel);
 
         for (let i = 0; i < 8; i++) {
-            let sp = i % 2 == 0 ? 50 : - 50;
+            let sp = i % 2 === 0 ? 50 : - 50;
             SetWheel(wheel, sp);
             basic.pause(500);
         }
@@ -56,7 +51,7 @@ namespace CarHandler {
 
     // the "angle" is pretty pointless since it basically works only for 90° xD
     function Rotate(angle: number, right: boolean) {
-        StopAll();
+        StopCar();
 
         basic.pause(100);
 
@@ -65,17 +60,13 @@ namespace CarHandler {
 
         basic.pause((defAngleTime / 180) * angle);
 
-        StopAll();
+        StopCar();
     }
 
-    /**
-      * Higher force = lower force xDDD
-    */
+    /** Higher force = lower force xDDD */
     export function RightTurn(speed: number, turnForce: number) { Move(speed / turnForce, speed); }
 
-    /**
-      * Higher force = lower force xDDD
-    */
+    /** Higher force = lower force xDDD */
     export function LeftTurn(speed: number, turnForce: number) { Move(speed, speed / turnForce); }
 
 
@@ -96,7 +87,7 @@ namespace CarHandler {
         let sp = speed < 0 ? -speed : speed;
         let forw = speed < 0 ? MD.Back : MD.Forward;
 
-        console.log(`${wheel}: ${sp}, ${forw}`)
+        //console.log(`${wheel}: ${sp}, ${forw}`)
 
         mecanumRobot.Motor(wheel, forw, sp);
     }
