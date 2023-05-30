@@ -87,16 +87,14 @@ basic.forever(function() {
             f = false;
         }
 
-        if(fl){
+        if (fl){
             console.log("left turn");
             CarHandler.RightTurn(speed, 4);
-
-            //CarHandler.RotateRight(10)
 
             f = false;
         }
 
-        if(!fl && !l){
+        if (!fl && !l){
             let dist = GetLeftWallDistance();
 
             if (dist > minWallDist && checkC <= 0){

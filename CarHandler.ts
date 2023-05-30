@@ -1,6 +1,7 @@
 namespace CarHandler {
-    export function GoForward(speed: number) { Move(speed, speed); }
+
     export function Gobackward(speed: number) { GoForward(-speed); }
+    export function GoForward(speed: number) { Move(speed, speed); }
 
     /** does not work with ks4031 for some reason */
     export function WeirdMove(speed: number) {
@@ -12,9 +13,6 @@ namespace CarHandler {
     }
 
     export function StopCar() { Move(0, 0); }
-    /*{
-        for (let i = 0; i < wheels.length; i++) { SetWheel(wheels[i], 0);}
-    }*/
 
     function Move(rSpeed: number, lSpeed: number) {
         RightFrontWheel(rSpeed);
@@ -63,10 +61,10 @@ namespace CarHandler {
         StopCar();
     }
 
-    /** Higher force = lower force xDDD */
+    /** Higher force = longer turn */
     export function RightTurn(speed: number, turnForce: number) { Move(speed / turnForce, speed); }
 
-    /** Higher force = lower force xDDD */
+    /** Higher force = longer turn */
     export function LeftTurn(speed: number, turnForce: number) { Move(speed, speed / turnForce); }
 
 
@@ -86,8 +84,6 @@ namespace CarHandler {
     function SetWheel(wheel : LR, speed : number){
         let sp = speed < 0 ? -speed : speed;
         let forw = speed < 0 ? MD.Back : MD.Forward;
-
-        //console.log(`${wheel}: ${sp}, ${forw}`)
 
         mecanumRobot.Motor(wheel, forw, sp);
     }
