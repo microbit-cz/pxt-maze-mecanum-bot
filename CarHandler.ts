@@ -23,15 +23,14 @@ namespace CarHandler {
     }
 
     export function Test(){
-        TestWheel(wheels[1]);
-        TestWheel(wheels[0]);
+        LeftTurn(80, 2);
     }
 
     function TestWheel(wheel : LR){
         console.log(wheel);
 
         for (let i = 0; i < 8; i++) {
-            let sp = i % 2 === 0 ? 50 : - 50;
+            let sp = i % 2 === 0 ? 100 : - 100;
             SetWheel(wheel, sp);
             basic.pause(500);
         }
@@ -40,8 +39,8 @@ namespace CarHandler {
     }
 
     // ROTATION
-    const defAngleTime = 1150; // how long does it take to rotate 180° at "rotateSpeed" in ms
-    const rotateSpeed = 50; // -100 -> 100
+    const defAngleTime = 750; // how long does it take to rotate 180° at "rotateSpeed" in ms
+    const rotateSpeed = 80; // -100 -> 100
 
     export function RotateRight(angle: number) { Rotate(angle, true); }
 

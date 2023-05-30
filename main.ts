@@ -1,20 +1,5 @@
 
 
-
-
-/*input.onButtonPressed(Button.A, function ()
-{    
-    Test();
-})*/
-
-/*input.onButtonPressed(Button.B, function () {
-    CarHandler.LeftTurn(30, 1.5);
-
-    //CarHandler.GoForward(20);
-
-    //CarHandler.GoForward(20);
-})*/
-
 input.onButtonPressed(Button.AB, function(){
     CarHandler.StopCar();
 })
