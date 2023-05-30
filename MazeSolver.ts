@@ -37,22 +37,13 @@ input.onButtonPressed(Button.A, function () {
 })
 
 const servoCheckCountdown = 1000; // in ms
-
-let deltaTime = 0;
-let lastTime = 0;
+const speed = 30;
 
 // TO DO: use fl & fr sensors
 basic.forever(function() {
-    let cTime = input.runningTime();
-    deltaTime = cTime - lastTime;
-    lastTime = cTime
 
     if (debug) return;
-
-    if(!solve){
-        CarHandler.StopCar();
-        return;
-    }
+    if (!solve) { CarHandler.StopCar(); return; }
 
     let l = pins.digitalReadPin(leftSensor) === 0;
     let fl = pins.digitalReadPin(frontLeftSensor) === 0;
@@ -61,19 +52,13 @@ basic.forever(function() {
 
     let fDist = mecanumRobot.ultra();
 
-    //console.log(`${l}, ${fl}, ${fr}, ${r}, ${fDist}`);
-
-    let speed = 30;
-
     let f = true;
 
     let checkC = 0;
 
     if (fDist < minWallDist){
         console.log("rotate");
-
-        CarHandler.StopCar();
-
+        
         if (l || fl) CarHandler.RotateRight(45);
         else CarHandler.RotateLeft(45);
 
@@ -113,6 +98,15 @@ basic.forever(function() {
 
     checkC - deltaTime;
 })
+
+let deltaTime = 0;
+let lastTime = 0;
+
+function UpdateDeltatime() {
+    let cTime = input.runningTime();
+    deltaTime = cTime - lastTime;
+    lastTime = cTime
+}
 
 const turnTime = 250;
 
