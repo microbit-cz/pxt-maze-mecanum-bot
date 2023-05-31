@@ -18,8 +18,10 @@ let debug = false;
 
 mecanumRobot.setServo(90);
 
+let turning = false;
+
 input.onButtonPressed(Button.B, function () {
-    CarHandler.Test();
+    if (GetLeftWallDistance() < minWallDist * 2) music.playTone(999 , 100);
 })
 
 input.onButtonPressed(Button.A, function () {
@@ -33,9 +35,13 @@ input.onButtonPressed(Button.A, function () {
 })
 
 const servoCheckCountdown = 1000; // in ms
-const speed = 50;
+const maxSpeed = 50;
+
+let speed = maxSpeed;
 
 let checkC = 0;
+
+let goForward = false;
 
 // TO DO: use fl & fr sensors
 basic.forever(function() {
@@ -55,6 +61,8 @@ basic.forever(function() {
 
     let f = true;
 
+    if (l) turning = false;
+
     if (fDist < minWallDist) {
         console.log("rotate");
         
@@ -65,18 +73,22 @@ basic.forever(function() {
         f = false;
     }
     else {
+        if (fl || l) speed = maxSpeed;
+
         if (fl) {
-            console.log("left turn");
+            console.log("right turn");
             CarHandler.RightTurn(speed, 4);
+            f = false;
+        }
+        else if (!fl && !l && !turning && checkC <= 0){
+            speed = maxSpeed / 2;
+            if (goForward) CarHandler.GoForward(speed);
+            ReturnToLeftWall();
             f = false;
         }
         else if (!l) {
             console.log("left turn");
             CarHandler.LeftTurn(speed, 2);
-            f = false;
-        }
-        else if (!fl && !l && checkC <= 0){
-            ReturnToLeftWall();
             f = false;
         }
     }
@@ -86,6 +98,8 @@ basic.forever(function() {
         CarHandler.GoForward(speed);
     }
 
+    goForward = f;
+
     console.log(`time: ${checkC} ${deltaTime}`);
     checkC -= deltaTime;
 
@@ -94,18 +108,17 @@ basic.forever(function() {
 
 /** if wall is close enought: slight left correction, othervise 90° turn */
 function ReturnToLeftWall(){
-    /*let dist = GetDistances();
 
-    if (dist[0] > minWallDist * 2 && dist[1] > minWallDist){
+    if (GetLeftWallDistance() > minWallDist * 2) {
         CarHandler.RotateLeft(90);
-    }*/
-
-    if (!LeftWallFound()) CarHandler.RotateLeft(90);
-    else CarHandler.LeftTurn(speed, 2);
+        turning = true;
+    }
+    else{
+        speed = maxSpeed;
+        CarHandler.LeftTurn(speed, 8);
+    }
 
     checkC = servoCheckCountdown;
-
-    //console.log(`Get distance: ${dist}`);
 }
 
 let deltaTime = 0;
@@ -126,59 +139,27 @@ function GetLeftWallDistance() : number{
     Measure_TryStopCar();
 
     mecanumRobot.setServo(170);
-
-    basic.pause(turnTime);
-    let fDist = mecanumRobot.ultra();
-
-    mecanumRobot.setServo(90);
-
     basic.pause(turnTime);
 
-    return fDist;
-}
-
-function GetLeftFrontDistance(): number {
-    Measure_TryStopCar();
-
-    mecanumRobot.setServo(130);
-
-    basic.pause(turnTime);
-    let fDist = mecanumRobot.ultra();
-
-    mecanumRobot.setServo(90);
-
-    basic.pause(turnTime);
-
-    return fDist;
-}
-
-function GetDistances(): number[] {
-    Measure_TryStopCar();
-
-    let arr : number[] = [];
-
-    mecanumRobot.setServo(frontLeftAngle);
-    basic.pause(turnTime);
-    music.playTone(500, 10);
-    arr.push(mecanumRobot.ultra());
-
-    mecanumRobot.setServo(leftAngle);
-    basic.pause(turnTime);
-    music.playTone(500, 10);
-    arr.push(mecanumRobot.ultra());
+    let v = mecanumRobot.ultra();
 
     mecanumRobot.setServo(90);
     basic.pause(turnTime);
 
-    return arr;
+    return v;
 }
 
-function LeftWallFound() : boolean {
+/*function LeftWallFound() : boolean {
     Measure_TryStopCar();
+
+    console.log(`Left wall found ?`);
 
     for (let angle = 90; angle <= 180; angle += 10){
         mecanumRobot.setServo(angle);
-        basic.pause(turnTime / 9);
+        basic.pause(turnTime / 3);
+        //basic.pause(2000);
+
+        console.log(`${angle} -> ${mecanumRobot.ultra()}`);
 
         if (mecanumRobot.ultra() < minWallDist * 2){
             mecanumRobot.setServo(90);
@@ -191,6 +172,6 @@ function LeftWallFound() : boolean {
     basic.pause(turnTime);
 
     return false;
-}
+}*/
 
 function Measure_TryStopCar() { if (mecanumRobot.ultra() < minWallDist * 2) CarHandler.StopCar(); }

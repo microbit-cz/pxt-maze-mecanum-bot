@@ -23,7 +23,7 @@ namespace CarHandler {
     }
 
     export function Test(){
-        LeftTurn(80, 2);
+        for(let i = 0; i < wheels.length; i++) TestWheel(wheels[i]);
     }
 
     function TestWheel(wheel : LR){
@@ -60,10 +60,10 @@ namespace CarHandler {
         StopCar();
     }
 
-    /** Higher force = longer turn */
+    /** lover force = longer turn */
     export function RightTurn(speed: number, turnForce: number) { Move(speed / turnForce, speed); }
 
-    /** Higher force = longer turn */
+    /** lover force = longer turn */
     export function LeftTurn(speed: number, turnForce: number) { Move(speed, speed / turnForce); }
 
 
