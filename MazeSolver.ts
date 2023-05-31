@@ -1,12 +1,4 @@
 
-
-
-// - Maintain contact with left wall
-// - Wall in front: Rotate right (if right side is clear, otherwise left) (until clear ?)
-// - If left wall is null: Correct by sligth left turn
-
-// if fl ---> right correction
-
 let leftSensor = DigitalPin.P0;
 let rightSensor = DigitalPin.P13;
 let frontRightSensor = DigitalPin.P12;
@@ -47,9 +39,6 @@ let checkC = 0;
 
 // TO DO: use fl & fr sensors
 basic.forever(function() {
-
-    console.log(mecanumRobot.ultra());
-
     UpdateDeltatime();
 
     if (debug) return;
@@ -66,30 +55,30 @@ basic.forever(function() {
 
     let f = true;
 
-    if (fDist < minWallDist){
+    if (fDist < minWallDist) {
         console.log("rotate");
         
         if (l || fl) CarHandler.RotateRight(90);
+        else if(r && l) CarHandler.RotateLeft(180);
         else CarHandler.RotateLeft(90);
 
         f = false;
     }
-    else{
-        if (!l) {
-            console.log("left turn");
-            CarHandler.LeftTurn(speed, 2);
-
-            f = false;
-        }
-
-        if (fl){
+    else {
+        if (fl) {
             console.log("left turn");
             CarHandler.RightTurn(speed, 4);
-
             f = false;
         }
-
-        if (!fl && !l && checkC <= 0) ReturnToLeftWall();
+        else if (!l) {
+            console.log("left turn");
+            CarHandler.LeftTurn(speed, 2);
+            f = false;
+        }
+        else if (!fl && !l && checkC <= 0){
+            ReturnToLeftWall();
+            f = false;
+        }
     }
 
     if (f){
@@ -99,18 +88,24 @@ basic.forever(function() {
 
     console.log(`time: ${checkC} ${deltaTime}`);
     checkC -= deltaTime;
+
+    basic.pause(10);
 })
 
+/** if wall is close enought: slight left correction, othervise 90° turn */
 function ReturnToLeftWall(){
-    let dist = GetDistances();
+    /*let dist = GetDistances();
 
     if (dist[0] > minWallDist * 2 && dist[1] > minWallDist){
         CarHandler.RotateLeft(90);
-    }
+    }*/
+
+    if (!LeftWallFound()) CarHandler.RotateLeft(90);
+    else CarHandler.LeftTurn(speed, 2);
 
     checkC = servoCheckCountdown;
 
-    console.log(`Get distance: ${dist}`);
+    //console.log(`Get distance: ${dist}`);
 }
 
 let deltaTime = 0;
@@ -128,11 +123,7 @@ const frontLeftAngle = 130;
 const leftAngle = 170;
 
 function GetLeftWallDistance() : number{
-    let u = mecanumRobot.ultra();
-
-    basic.pause(100);
-
-    if (u < minWallDist * 2) CarHandler.StopCar();
+    Measure_TryStopCar();
 
     mecanumRobot.setServo(170);
 
@@ -147,6 +138,8 @@ function GetLeftWallDistance() : number{
 }
 
 function GetLeftFrontDistance(): number {
+    Measure_TryStopCar();
+
     mecanumRobot.setServo(130);
 
     basic.pause(turnTime);
@@ -159,9 +152,8 @@ function GetLeftFrontDistance(): number {
     return fDist;
 }
 
-function GetDistances(): number[]{
-    if (mecanumRobot.ultra() < minWallDist * 2) CarHandler.StopCar();
-    basic.pause(100);
+function GetDistances(): number[] {
+    Measure_TryStopCar();
 
     let arr : number[] = [];
 
@@ -180,3 +172,25 @@ function GetDistances(): number[]{
 
     return arr;
 }
+
+function LeftWallFound() : boolean {
+    Measure_TryStopCar();
+
+    for (let angle = 90; angle <= 180; angle += 10){
+        mecanumRobot.setServo(angle);
+        basic.pause(turnTime / 9);
+
+        if (mecanumRobot.ultra() < minWallDist * 2){
+            mecanumRobot.setServo(90);
+            basic.pause(turnTime);
+            return true;
+        }
+    }
+
+    mecanumRobot.setServo(90);
+    basic.pause(turnTime);
+
+    return false;
+}
+
+function Measure_TryStopCar() { if (mecanumRobot.ultra() < minWallDist * 2) CarHandler.StopCar(); }
