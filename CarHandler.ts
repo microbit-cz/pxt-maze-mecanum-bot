@@ -23,12 +23,10 @@ namespace CarHandler {
     }
 
     export function Test(){
-        for(let i = 0; i < wheels.length; i++) TestWheel(wheels[i]);
+        for(let i = 0; i < wheels.length; i++) TestWheel(i);
     }
 
-    function TestWheel(wheel : LR){
-        console.log(wheel);
-
+    function TestWheel(wheel : number){
         for (let i = 0; i < 8; i++) {
             let sp = i % 2 === 0 ? 100 : - 100;
             SetWheel(wheel, sp);
@@ -68,22 +66,29 @@ namespace CarHandler {
 
 
     /// ---- --- WHEELS --- ---- \\\
-    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left]
+    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left];
+    let minSpeed = [1, 1, 1, 1]; // if requested speed is lower than this => 0 will be sent instead
 
-    function RightFrontWheel(speed: number){
-        //if (speed < 0) speed = 0; // this wheel can't spin back for some reason (if it does it won't go forward without help :( )
+    let maxSpeedF = [100, 100, 100, 100]; // in %
+    let maxSpeedB = [100, 100, 100, 100]; // in %
 
-        SetWheel(wheels[0], speed);
-    }
-    function LeftFrontWheel(speed: number) { SetWheel(wheels[1], speed); }
+    function RightFrontWheel(speed: number) { SetWheel(0, speed); }
+    function LeftFrontWheel(speed: number) { SetWheel(1, speed); }
     
-    function RightBackWheel(speed: number) { SetWheel(wheels[2], speed); }
-    function LeftBackWheel(speed: number) { SetWheel(wheels[3], speed); }
+    function RightBackWheel(speed: number) { SetWheel(2, speed); }
+    function LeftBackWheel(speed: number) { SetWheel(3, speed); }
 
-    function SetWheel(wheel : LR, speed : number){
-        let sp = speed < 0 ? -speed : speed;
+    function SetWheel(id : number, speed : number){
+        let sp = Math.abs(speed);
         let forw = speed < 0 ? MD.Back : MD.Forward;
+        let mSp = speed < 0 ? maxSpeedB[id] : maxSpeedF[id];
 
-        mecanumRobot.Motor(wheel, forw, sp);
+        let fSpeed = Math.map(sp, 0, 100, 0, mSp);
+
+        if (fSpeed < minSpeed[id]) sp = 0;
+
+        console.log(`speed ${id} = ${fSpeed}`);
+
+        mecanumRobot.Motor(wheels[id], forw, sp);
     }
 }
