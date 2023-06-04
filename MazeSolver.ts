@@ -1,15 +1,5 @@
 
-let leftSensor = DigitalPin.P0;
-let rightSensor = DigitalPin.P13;
-let frontRightSensor = DigitalPin.P12;
-let frontLeftSensor = DigitalPin.P7; // works only when display is disabled
-
-led.enable(false); // this makes P7 show correct value, display does not works tho :(
-
-pins.setPull(leftSensor, PinPullMode.PullNone);
-pins.setPull(frontLeftSensor, PinPullMode.PullNone);
-pins.setPull(frontRightSensor, PinPullMode.PullNone);
-pins.setPull(rightSensor, PinPullMode.PullNone);
+CarHandler.SetupSensors();
 
 const minWallDist = 12;
 
@@ -50,16 +40,13 @@ basic.forever(function() {
     if (debug) return;
     if (!solve) { CarHandler.StopCar(); return; }
 
-    console.log(solve);
-
-    let l = pins.digitalReadPin(leftSensor) === 0;
-    let fl = pins.digitalReadPin(frontLeftSensor) === 0;
-    let fr = pins.digitalReadPin(frontRightSensor) === 0;
-    let r = pins.digitalReadPin(rightSensor) === 0;
+    let l = CarHandler.LeftSensor();
+    let fl = CarHandler.LeftFrontSensor();    
+    let r = CarHandler.RightSensor();
+    let fr = CarHandler.RightFrontSensor();
 
     let fDist = mecanumRobot.ultra();
-
-    let f = true;
+    let f = true; // go forward
 
     if (l) turning = false;
 

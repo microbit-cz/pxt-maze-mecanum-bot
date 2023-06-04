@@ -1,5 +1,25 @@
 namespace CarHandler {
 
+    let leftSensor = DigitalPin.P0;
+    let rightSensor = DigitalPin.P13;
+    let frontRightSensor = DigitalPin.P12;
+    let frontLeftSensor = DigitalPin.P7; // works only when display is disabled
+
+    export function SetupSensors(){
+        pins.setPull(leftSensor, PinPullMode.PullNone);
+        pins.setPull(frontLeftSensor, PinPullMode.PullNone);
+        pins.setPull(frontRightSensor, PinPullMode.PullNone);
+        pins.setPull(rightSensor, PinPullMode.PullNone);
+
+        led.enable(false); // this makes P7 show correct value, display does not works tho :(
+    }
+
+    export function LeftSensor() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function RightSensor() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function LeftFrontSensor() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function RightFrontSensor() { return pins.digitalReadPin(leftSensor) === 0; }
+
+    // ---- MOVEMENT ----
     export function Gobackward(speed: number) { GoForward(-speed); }
     export function GoForward(speed: number) { Move(speed, speed); }
 
@@ -80,7 +100,7 @@ namespace CarHandler {
 
     function SetWheel(id : number, speed : number){
         let sp = Math.abs(speed);
-        let forw = speed < 0 ? MD.Back : MD.Forward;
+        let direction = speed < 0 ? MD.Back : MD.Forward;
         let mSp = speed < 0 ? maxSpeedB[id] : maxSpeedF[id];
 
         let fSpeed = Math.map(sp, 0, 100, 0, mSp);
@@ -89,6 +109,6 @@ namespace CarHandler {
 
         console.log(`speed ${id} = ${fSpeed}`);
 
-        mecanumRobot.Motor(wheels[id], forw, sp);
+        mecanumRobot.Motor(wheels[id], direction, sp);
     }
 }
