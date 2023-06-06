@@ -14,10 +14,10 @@ namespace CarHandler {
         led.enable(false); // this makes P7 show correct value, display does not works tho :(
     }
 
-    export function LeftSensor() { return pins.digitalReadPin(leftSensor) === 0; }
-    export function RightSensor() { return pins.digitalReadPin(leftSensor) === 0; }
-    export function LeftFrontSensor() { return pins.digitalReadPin(leftSensor) === 0; }
-    export function RightFrontSensor() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function GetLeftSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function GetRightSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function GetLeftFrontSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function GetRightFrontSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
 
     // ---- MOVEMENT ----
     export function Gobackward(speed: number) { GoForward(-speed); }
