@@ -59,26 +59,32 @@ function Update(){
         recentR = r;
     }
 
+    if (executeCor) ExecuteCoroutine();
+
+    let goForw = true;
+
     // FIX DIRECTION
     if (!f) {
         if (!fl || !fr) // if both of them are triggered --> ignore
         {
             if (fl) CarHandler.LeftTurn(speed, 2);
             else if (fr) CarHandler.RightTurn(speed, 2);
+
+            if (fl || fr) goForw = false;
         }
     }
 
     // CALCULATE NEXT STEP
-    if(f && bSides){
-        if (rotatingR) CarHandler.RotateRight(90);
-        else if (rotatingL) CarHandler.RotateLeft(90);
+    if (f && bSides){
+        if (rotatingR) RotateRight();
+        else if (rotatingL) RotateLeft();
         else{
             CarHandler.RotateRight(180);
             StartReturn(false);
         }
     }
-    else if(canChangeDir && canRotate){
-        if(timeToRegister < 0 || f){
+    else if (canChangeDir && canRotate){
+        if (timeToRegister < 0 || f){
 
             let ch = false;
 
@@ -92,7 +98,7 @@ function Update(){
                 if(!isCross || !returning){
                     let dir : Direction;
 
-                    if(executePath && isCross){
+                    if (executePath && isCross){
                         dir = crosses[currentPosition].direction;
                         currentPosition++;
                     }
@@ -116,11 +122,11 @@ function Update(){
         }
     }
 
-    CarHandler.GoForward(speed);
+    if (goForw) CarHandler.GoForward(speed);
 }
 
 function CalculateReturn(leftSide : boolean, rightSide: boolean, fDist: number){
-
+    
 }
 
 function OnDirChanged() { dirChanges += returning ? -1 : 1; }
@@ -140,8 +146,8 @@ function StartReturn(adjustDirChanges : boolean)
 
 function ExecuteDir(dir: Direction){
     switch (dir) {
-        case Direction.left: CarHandler.RotateLeft(90); break;
-        case Direction.right: CarHandler.RotateRight(90); break;
+        case Direction.left: RotateLeft(); break;
+        case Direction.right: RotateRight(); break;
         case Direction.forward: ExecuteForwardDirection(); break;
     }
 }
@@ -155,6 +161,39 @@ function GetPossibleDirections(ls : boolean, rs: boolean, fDist: number)
     if (fDist > minWallDist * 1.5) list.push(Direction.forward);
 
     return list;
+}
+
+function RotateLeft(immidiatelly = false){
+    Rotate(immidiatelly, false);
+    rotatingL = true;
+}
+
+function RotateRight(immidiatelly = false){
+    Rotate(immidiatelly, true);
+    rotatingR = true;
+}
+
+let executeCor : boolean;
+let timeToExecute : number;
+let value : number;
+
+function Rotate(im : boolean, right : boolean)
+{
+    executeCor = true;
+    value = right ? -90 : 90;
+
+    timeToExecute = turnPause;
+    if (im) ExecuteCoroutine();
+}
+
+function ExecuteCoroutine()
+{
+    timeToExecute -= Time.deltaTime;
+
+    if (timeToExecute <= 0) {
+        CarHandler.Rotate(value);
+        executeCor = false;
+    }
 }
 
 // -------

@@ -60,20 +60,20 @@ namespace CarHandler {
     const defAngleTime = 750; // how long does it take to rotate 180° at "rotateSpeed" in ms
     const rotateSpeed = 80; // -100 -> 100
 
-    export function RotateRight(angle: number) { Rotate(angle, true); }
+    export function RotateRight(angle: number) { Rotate(-angle); }
 
-    export function RotateLeft(angle: number) { Rotate(angle, false); }
+    export function RotateLeft(angle: number) { Rotate(angle); }
 
-    // the "angle" is pretty pointless since it basically works only for 90° xD
-    function Rotate(angle: number, right: boolean) {
+    /** positive angle = left, negative angle = right */
+    export function Rotate(angle: number) {
         StopCar();
 
         basic.pause(100);
 
-        let sp = right ? -rotateSpeed : rotateSpeed;
+        let sp = angle < 0 ? -rotateSpeed : rotateSpeed;
         Move(sp, -sp);
 
-        basic.pause((defAngleTime / 180) * angle);
+        basic.pause((defAngleTime / 180) * Math.abs(angle));
 
         StopCar();
     }

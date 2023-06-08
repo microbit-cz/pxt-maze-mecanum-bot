@@ -5,8 +5,7 @@
         "core": "*",
         "radio": "*",
         "microphone": "*",
-        "pxt-mecanum-robot": "github:keyestudio2019/mecanum_robot#v1.1.3",
-        "WhaleySansFont": "github:makecode-extensions/whaleysansfont#v1.1.0"
+        "pxt-mecanum-robot": "github:keyestudio2019/mecanum_robot#v1.1.3"
     },
     "files": [
         "main.ts",
