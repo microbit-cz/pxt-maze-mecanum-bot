@@ -36,7 +36,7 @@ namespace BasicMazeSolver{
 
     // TO DO: use fl & fr sensors
     basic.forever(function () {
-        UpdateDeltatime();
+        Time.UpdateDeltatime();
 
         if (debug) return;
         if (!solve) { CarHandler.StopCar(); return; }
@@ -88,8 +88,8 @@ namespace BasicMazeSolver{
 
         goForward = f;
 
-        console.log(`time: ${checkC} ${deltaTime}`);
-        checkC -= deltaTime;
+        console.log(`time: ${checkC} ${Time.deltaTime}`);
+        checkC -= Time.deltaTime;
 
         basic.pause(10);
     })
@@ -107,15 +107,6 @@ namespace BasicMazeSolver{
         }
 
         checkC = servoCheckCountdown;
-    }
-
-    let deltaTime = 0;
-    let lastTime = 0;
-
-    function UpdateDeltatime() {
-        let cTime = input.runningTime();
-        deltaTime = cTime - lastTime;
-        lastTime = cTime
     }
 
     const turnTime = 350;
@@ -137,30 +128,16 @@ namespace BasicMazeSolver{
         return v;
     }
 
-    /*function LeftWallFound() : boolean {
-        Measure_TryStopCar();
-    
-        console.log(`Left wall found ?`);
-    
-        for (let angle = 90; angle <= 180; angle += 10){
-            mecanumRobot.setServo(angle);
-            basic.pause(turnTime / 3);
-            //basic.pause(2000);
-    
-            console.log(`${angle} -> ${mecanumRobot.ultra()}`);
-    
-            if (mecanumRobot.ultra() < minWallDist * 2){
-                mecanumRobot.setServo(90);
-                basic.pause(turnTime);
-                return true;
-            }
-        }
-    
-        mecanumRobot.setServo(90);
-        basic.pause(turnTime);
-    
-        return false;
-    }*/
-
     function Measure_TryStopCar() { if (mecanumRobot.ultra() < minWallDist * 2) CarHandler.StopCar(); }
+}
+
+namespace Time{
+    export let deltaTime = 0;
+    let lastTime = 0;
+
+    export function UpdateDeltatime() {
+        let cTime = input.runningTime();
+        deltaTime = cTime - lastTime;
+        lastTime = cTime
+    }
 }
