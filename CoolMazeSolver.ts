@@ -86,14 +86,11 @@ function Update(){
     else if (canChangeDir && canRotate){
         if (timeToRegister < 0 || f){
 
-            let ch = false;
-
             if(returning && pathToChange.turn == dirChanges){
                 CalculateReturn(leftSide, rightSide, fDist);
-                ch = true;
             }
             else{
-                let isCross = GetPossibleDirections(leftSide, rightSide, fDist).length > 1;
+                let isCross = Utils.GetPossibleDirections(leftSide, rightSide, fDist, minWallDist * 1.5).length > 1;
             
                 if(!isCross || !returning){
                     let dir : Direction;
@@ -110,15 +107,12 @@ function Update(){
                     ExecuteDir(dir);
 
                     if (isCross && !executePath) {
-                        let dirs : Direction[] = [dir];
-                        crosses.push(new MazePart(dir, dirChanges + 1, dirs)); // +1 because it needs to calculate with the one that is going to be added later
+                        crosses.push(new MazePart(dir, dirChanges + 1, [dir])); // +1 because it needs to calculate with the one that is going to be added later
                     }
 
-                    ch = true;
+                    OnDirChanged();
                 }
             }
-
-            if(ch) OnDirChanged();
         }
     }
 
@@ -126,24 +120,51 @@ function Update(){
 }
 
 function CalculateReturn(leftSide : boolean, rightSide: boolean, fDist: number){
-    
+    let stopReturn = true;
+    let possibleDirs = GetFixedPossibleDirections(leftSide, rightSide, fDist);
+
+    let possibleDirsCount = possibleDirs.length; // before "none" could be removed
+
+    if (possibleDirs.length > 1) possibleDirs.removeElement(Direction.none);
+
+    if (possibleDirsCount == 1) // back
+    {
+        stopReturn = false;
+    }
+    else{
+        let usedDirs = pathToChange.usedPaths;
+        usedDirs.push(possibleDirs[0]);
+        crosses.push(new MazePart(possibleDirs[0], dirChanges, usedDirs));
+    }
+
+    let tDir = stopReturn ? possibleDirs[0] : Direction.none;
+    let execDir = Utils.GetFixedDirection_Invert(tDir, pathToChange.direction);
+
+    if (stopReturn) returning = false;
+    else StartReturn(true);
+
+    ExecuteDir(execDir);
 }
 
 function OnDirChanged() { dirChanges += returning ? -1 : 1; }
 
-function ExecuteForwardDirection(){
-    if (!l) rotatingL = true;
-    else if (!r) rotatingR = true;
+function GetFixedPossibleDirections(leftSide : boolean, rightSide : boolean, fDist : number) : Direction[] {
+    let p1 = Utils.GetPossibleDirections(leftSide, rightSide, fDist, minWallDist * 1.5);
+    let fixedDirs = Utils.GetFixedDirections(p1, pathToChange.direction);
+    let possibleDirs = Utils.RemoveDirectionsFromList(fixedDirs, pathToChange.usedPaths);
+
+    return possibleDirs;
 }
 
-function StartReturn(adjustDirChanges : boolean)
-{
+function StartReturn(adjustDirChanges : boolean){
     if (adjustDirChanges) { dirChanges--; }
 
     returning = true;
     pathToChange = crosses.pop();
 }
 
+
+// ------- MOVEMENT
 function ExecuteDir(dir: Direction){
     switch (dir) {
         case Direction.left: RotateLeft(); break;
@@ -152,15 +173,9 @@ function ExecuteDir(dir: Direction){
     }
 }
 
-function GetPossibleDirections(ls : boolean, rs: boolean, fDist: number)
-{
-    let list: Direction[];
-
-    if (!ls) list.push(Direction.left);
-    if (!rs) list.push(Direction.right);
-    if (fDist > minWallDist * 1.5) list.push(Direction.forward);
-
-    return list;
+function ExecuteForwardDirection() {
+    if (!l) rotatingL = true;
+    else if (!r) rotatingR = true;
 }
 
 function RotateLeft(immidiatelly = false){
@@ -177,8 +192,7 @@ let executeCor : boolean;
 let timeToExecute : number;
 let value : number;
 
-function Rotate(im : boolean, right : boolean)
-{
+function Rotate(im : boolean, right : boolean){
     executeCor = true;
     value = right ? -90 : 90;
 
@@ -186,8 +200,7 @@ function Rotate(im : boolean, right : boolean)
     if (im) ExecuteCoroutine();
 }
 
-function ExecuteCoroutine()
-{
+function ExecuteCoroutine(){
     timeToExecute -= Time.deltaTime;
 
     if (timeToExecute <= 0) {

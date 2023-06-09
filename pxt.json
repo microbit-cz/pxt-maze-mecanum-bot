@@ -12,7 +12,8 @@
         "README.md",
         "CarHandler.ts",
         "MazeSolver.ts",
-        "CoolMazeSolver.ts"
+        "CoolMazeSolver.ts",
+        "CoolMazeSolverUtils.ts"
     ],
     "testFiles": [
         "test.ts"
