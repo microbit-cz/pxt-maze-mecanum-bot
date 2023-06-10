@@ -87,10 +87,12 @@ namespace CarHandler {
 
     /// ---- --- WHEELS --- ---- \\\
     let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left];
-    let minSpeed = [1, 1, 1, 1]; // if requested speed is lower than this => 0 will be sent instead
+    
+    let minSpeedF = [16, 13, 9, 10]; // if requested speed is lower than this => 0 will be sent instead
+    let minSpeedB = [13, 10, 8, 8];
 
-    let maxSpeedF = [100, 100, 100, 100]; // in %
-    let maxSpeedB = [100, 100, 100, 100]; // in %
+    let maxSpeedF = [100, 85, 58, 65]; // in %
+    let maxSpeedB = [100, 85, 63, 63]; // in %
 
     function RightFrontWheel(speed: number) { SetWheel(0, speed); }
     function LeftFrontWheel(speed: number) { SetWheel(1, speed); }
@@ -99,16 +101,20 @@ namespace CarHandler {
     function LeftBackWheel(speed: number) { SetWheel(3, speed); }
 
     function SetWheel(id : number, speed : number){
-        let sp = Math.abs(speed);
         let direction = speed < 0 ? MD.Back : MD.Forward;
         let mSp = speed < 0 ? maxSpeedB[id] : maxSpeedF[id];
 
-        let fSpeed = Math.map(sp, 0, 100, 0, mSp);
+        let fSpeed = Math.map(Math.abs(speed), 0, 100, 0, mSp);
 
-        if (fSpeed < minSpeed[id]) sp = 0;
+        if (speed < 0){
+            if (fSpeed < minSpeedB[id]) fSpeed = 0;
+        }
+        else{
+            if (fSpeed < minSpeedF[id]) fSpeed = 0;
+        }
 
         console.log(`speed ${id} = ${fSpeed}`);
 
-        mecanumRobot.Motor(wheels[id], direction, sp);
+        mecanumRobot.Motor(wheels[id], direction, fSpeed);
     }
 }

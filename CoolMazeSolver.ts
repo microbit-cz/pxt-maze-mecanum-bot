@@ -1,5 +1,5 @@
 // --- SENSORS SETTINGS ---
-// left and right: distance way longer than distance to the wall
+// left and right: distance way longer ( < 2x ) than distance to the wall
 // front left and front right: bit shorter that distance to the wall (neither of them has contact if car is correctly rotated in the middle)
 // min wall dist has to have higher range that fl & fr (in forward direction)
 
@@ -15,7 +15,7 @@ let pathToChange : MazePart;
 let rotatingL = false;
 let rotatingR = false;
 
-let speed = 50;
+let speed = 30;
 let turnPause = 0;
 
 let gapRegisterTime = .2;
@@ -67,8 +67,8 @@ function Update(){
     if (!f) {
         if (!fl || !fr) // if both of them are triggered --> ignore
         {
-            if (fl) CarHandler.LeftTurn(speed, 2);
-            else if (fr) CarHandler.RightTurn(speed, 2);
+            if (fl) CarHandler.LeftTurn(speed, 1.5);
+            else if (fr) CarHandler.RightTurn(speed, 1.5);
 
             if (fl || fr) goForw = false;
         }
