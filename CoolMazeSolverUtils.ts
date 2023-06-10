@@ -1,7 +1,7 @@
 namespace Utils{
     /** returns every currently possible direction */
     export function GetPossibleDirections(ls: boolean, rs: boolean, fDist: number, maxFDist : number): Direction[] {
-        let list: Direction[];
+        let list: Direction[] = [];
 
         if (!ls) list.push(Direction.left);
         if (!rs) list.push(Direction.right);

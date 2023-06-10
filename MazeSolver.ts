@@ -17,8 +17,7 @@ namespace BasicMazeSolver{
 
     // TO DO: use fl & fr sensors
     export function Update() {
-        Time.UpdateDeltatime();
-
+        
         if (!solve) { CarHandler.StopCar(); return; }
 
         let l = CarHandler.GetLeftSensorState();

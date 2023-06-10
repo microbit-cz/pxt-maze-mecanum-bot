@@ -15,9 +15,9 @@ namespace CarHandler {
     }
 
     export function GetLeftSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
-    export function GetRightSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
-    export function GetLeftFrontSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
-    export function GetRightFrontSensorState() { return pins.digitalReadPin(leftSensor) === 0; }
+    export function GetRightSensorState() { return pins.digitalReadPin(rightSensor) === 0; }
+    export function GetLeftFrontSensorState() { return pins.digitalReadPin(frontLeftSensor) === 0; }
+    export function GetRightFrontSensorState() { return pins.digitalReadPin(frontRightSensor) === 0; }
 
     // ---- MOVEMENT ----
     export function Gobackward(speed: number) { GoForward(-speed); }
@@ -113,7 +113,7 @@ namespace CarHandler {
             if (fSpeed < minSpeedF[id]) fSpeed = 0;
         }
 
-        console.log(`speed ${id} = ${fSpeed}`);
+        //console.log(`speed ${id} = ${fSpeed}`);
 
         mecanumRobot.Motor(wheels[id], direction, fSpeed);
     }

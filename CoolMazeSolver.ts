@@ -6,7 +6,7 @@
 let executePath = false;
 let currentPosition = 0; // array id for path executing
 
-let crosses : MazePart[];
+let crosses : MazePart[] = [];
 let dirChanges = 0;
 
 let returning = false;
@@ -18,7 +18,7 @@ let rotatingR = false;
 let speed = 30;
 let turnPause = 0;
 
-let gapRegisterTime = .2;
+let gapRegisterTime = 200; // in micros
 let timeToRegister = 0;
 
 let recentL = true;
@@ -38,6 +38,8 @@ function Update(){
     l = CarHandler.GetLeftSensorState();
     r = CarHandler.GetRightSensorState();
 
+    console.log(`${l}, ${r}`);
+
     let f = fDist < minWallDist;
 
     let leftSide = l || fl;
@@ -48,7 +50,7 @@ function Update(){
 
     let canChangeDir = !leftSide || !rightSide;
     let canRotate = !rotatingL && !rotatingR;
-    let bSides = !l && !r;
+    let bSides = l && r;
 
     timeToRegister -= Time.deltaTime;
     let rl = l != recentL;
@@ -57,11 +59,16 @@ function Update(){
         timeToRegister = gapRegisterTime;
         recentL = l;
         recentR = r;
+
+        console.log("Updating time to register");
     }
 
     if (executeCor) ExecuteCoroutine();
 
     let goForw = true;
+
+    //console.log(`${f}, ${bSides}, ${canChangeDir}, ${canRotate}`);
+    console.log(`${timeToRegister}`);
 
     // FIX DIRECTION
     if (!f) {
@@ -84,14 +91,19 @@ function Update(){
         }
     }
     else if (canChangeDir && canRotate){
-        if (timeToRegister < 0 || f){
+        console.log(returning);
+        console.log(timeToRegister);
 
-            if(returning && pathToChange.turn == dirChanges){
+        if (timeToRegister <= 0 || f){
+
+            console.log("1");
+
+            if (returning && pathToChange.turn == dirChanges) {
                 CalculateReturn(leftSide, rightSide, fDist);
             }
             else{
                 let isCross = Utils.GetPossibleDirections(leftSide, rightSide, fDist, minWallDist * 1.5).length > 1;
-            
+
                 if(!isCross || !returning){
                     let dir : Direction;
 
@@ -117,6 +129,8 @@ function Update(){
     }
 
     if (goForw) CarHandler.GoForward(speed);
+
+    basic.pause(10);
 }
 
 function CalculateReturn(leftSide : boolean, rightSide: boolean, fDist: number){
@@ -188,9 +202,9 @@ function RotateRight(immidiatelly = false){
     rotatingR = true;
 }
 
-let executeCor : boolean;
-let timeToExecute : number;
-let value : number;
+let executeCor : boolean = false;
+let timeToExecute : number = 0;
+let value : number = 0;
 
 function Rotate(im : boolean, right : boolean){
     executeCor = true;
@@ -201,6 +215,7 @@ function Rotate(im : boolean, right : boolean){
 }
 
 function ExecuteCoroutine(){
+
     timeToExecute -= Time.deltaTime;
 
     if (timeToExecute <= 0) {

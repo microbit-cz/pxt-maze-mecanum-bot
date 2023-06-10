@@ -20,6 +20,8 @@ input.onButtonPressed(Button.AB, function(){
 basic.forever(function() {
     if (!solve) return;
 
+    Time.UpdateDeltatime();
+
     if(coolMazeSolver) Update();
     else BasicMazeSolver.Update();
 })
