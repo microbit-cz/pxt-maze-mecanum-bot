@@ -16,9 +16,9 @@ let rotatingL = false;
 let rotatingR = false;
 
 let speed = 30;
-let turnPause = 0;
+const turnPause = 850;
 
-let gapRegisterTime = 200; // in micros
+const gapRegisterTime = 850; // in micros
 let timeToRegister = 0;
 
 let recentL = true;
@@ -27,7 +27,8 @@ let recentR = true;
 let l = false;
 let r = false;
 
-let minWallDist = 10; // ?
+const minWallDist = 10; // ?
+const correctionStrenght = 2;
 
 function Update(){
 
@@ -74,8 +75,8 @@ function Update(){
     if (!f) {
         if (!fl || !fr) // if both of them are triggered --> ignore
         {
-            if (fl) CarHandler.LeftTurn(speed, 1.5);
-            else if (fr) CarHandler.RightTurn(speed, 1.5);
+            if (fl) CarHandler.RightTurn(speed, correctionStrenght);
+            else if (fr) CarHandler.LeftTurn(speed, correctionStrenght);
 
             if (fl || fr) goForw = false;
         }
@@ -104,6 +105,8 @@ function Update(){
             else{
                 let isCross = Utils.GetPossibleDirections(leftSide, rightSide, fDist, minWallDist * 1.5).length > 1;
 
+                if (isCross) music.playTone(500, 500);
+
                 if(!isCross || !returning){
                     let dir : Direction;
 
@@ -129,6 +132,8 @@ function Update(){
     }
 
     if (goForw) CarHandler.GoForward(speed);
+
+    CarHandler.EnableRGBLED(LedCount.Left, returning);
 
     basic.pause(10);
 }

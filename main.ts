@@ -9,8 +9,9 @@ input.onButtonPressed(Button.A, function () {
     solve = !solve;
 })
 
-input.onButtonPressed(Button.B, function () {
-
+input.onButtonPressed(Button.B, function () {    
+    executePath = !executePath;
+    CarHandler.EnableRGBLED(LedCount.Right, executePath);
 })
 
 input.onButtonPressed(Button.AB, function(){

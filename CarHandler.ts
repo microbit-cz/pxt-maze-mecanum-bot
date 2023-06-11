@@ -1,5 +1,14 @@
 namespace CarHandler {
 
+    let lightStripPin = DigitalPin.P8;
+    let strip = neopixel.create(lightStripPin, 4, NeoPixelMode.RGB); // 0 = left front, 1 = right front, 2 = right back, 3 = left back
+
+    export function EnableRGBLED(led : LedCount, enable : boolean){
+        let state = enable ? LedState.ON : LedState.OFF;
+        mecanumRobot.setLed(led, state);
+    }
+
+    // ---- SENSORS ----
     let leftSensor = DigitalPin.P0;
     let rightSensor = DigitalPin.P13;
     let frontRightSensor = DigitalPin.P12;
@@ -57,7 +66,7 @@ namespace CarHandler {
     }
 
     // ROTATION
-    const defAngleTime = 750; // how long does it take to rotate 180° at "rotateSpeed" in ms
+    const defAngleTime = 1150; // prev = 750 // how long does it take to rotate 180° at "rotateSpeed" in ms
     const rotateSpeed = 80; // -100 -> 100
 
     export function RotateRight(angle: number) { Rotate(-angle); }
@@ -87,6 +96,8 @@ namespace CarHandler {
 
     /// ---- --- WHEELS --- ---- \\\
     let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left];
+
+    let invert = [false, false, true, false];
     
     let minSpeedF = [16, 13, 9, 10]; // if requested speed is lower than this => 0 will be sent instead
     let minSpeedB = [13, 10, 8, 8];
@@ -101,6 +112,8 @@ namespace CarHandler {
     function LeftBackWheel(speed: number) { SetWheel(3, speed); }
 
     function SetWheel(id : number, speed : number){
+        if (invert[id]) speed = -speed;
+
         let direction = speed < 0 ? MD.Back : MD.Forward;
         let mSp = speed < 0 ? maxSpeedB[id] : maxSpeedF[id];
 
