@@ -97,7 +97,7 @@ namespace CarHandler {
     /// ---- --- WHEELS --- ---- \\\
     let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left];
 
-    let invert = [false, false, true, false];
+    let invert = [false, false, false, false];
     
     let minSpeedF = [16, 13, 9, 10]; // if requested speed is lower than this => 0 will be sent instead
     let minSpeedB = [13, 10, 8, 8];
