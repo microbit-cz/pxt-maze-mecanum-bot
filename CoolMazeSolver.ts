@@ -3,7 +3,18 @@
 // front left and front right: bit shorter that distance to the wall (neither of them has contact if car is correctly rotated in the middle)
 // min wall dist has to have higher range that fl & fr (in forward direction)
 
+// SETTINGS
+const speed = 30;
+const turnPause = 850; // in micros
+const gapRegisterTime = 850; // in micros
+
+const minWallDist = 10; // ?
+const correctionStrenght = 2;
+
+// --- RUNTIME SETTINGS
 let executePath = false;
+
+// RUNTIME DATA
 let currentPosition = 0; // array id for path executing
 
 let crosses : MazePart[] = [];
@@ -12,23 +23,16 @@ let dirChanges = 0;
 let returning = false;
 let pathToChange : MazePart;
 
+let timeToRegister = 0;
+
 let rotatingL = false;
 let rotatingR = false;
-
-let speed = 30;
-const turnPause = 850;
-
-const gapRegisterTime = 850; // in micros
-let timeToRegister = 0;
 
 let recentL = true;
 let recentR = true;
 
-let l = false;
-let r = false;
-
-const minWallDist = 10; // ?
-const correctionStrenght = 2;
+let l = false; // left sensor
+let r = false; // right sensor
 
 function Update(){
 
@@ -231,7 +235,6 @@ function ExecuteCoroutine(){
 
 // -------
 class MazePart{
-
     usedPaths : Direction[];
 
     direction : Direction;
