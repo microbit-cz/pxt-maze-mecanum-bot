@@ -11,6 +11,7 @@ input.onButtonPressed(Button.A, function () {
 
 input.onButtonPressed(Button.B, function () {    
     executePath = !executePath;
+    currentPosition = 0;
     CarHandler.EnableRGBLED(LedCount.Right, executePath);
 })
 
@@ -23,6 +24,8 @@ basic.forever(function() {
 
     Time.UpdateDeltatime();
 
-    if(coolMazeSolver) Update();
+    if (coolMazeSolver) Update();
     else BasicMazeSolver.Update();
+
+    basic.pause(10);
 })

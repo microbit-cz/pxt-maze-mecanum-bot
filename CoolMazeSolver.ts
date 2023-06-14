@@ -5,11 +5,11 @@
 
 // SETTINGS
 const speed = 30;
-const turnPause = 850; // in micros
-const gapRegisterTime = 850; // in micros
+const turnPause = 700; // pause between start of rotation and execution, in micros
+const gapRegisterTime = 900; // pause between state change on any (L or R) sensor and next move calculation, in micros
 
-const minWallDist = 10; // ?
-const correctionStrenght = 2;
+const minWallDist = 10; // any shorter distance to front wall that will trigger return
+const correctionStrenght = 2; // strenght of correction turns when wall (on FL or FR) is detected
 
 // --- RUNTIME SETTINGS
 let executePath = false;
@@ -138,8 +138,6 @@ function Update(){
     if (goForw) CarHandler.GoForward(speed);
 
     CarHandler.EnableRGBLED(LedCount.Left, returning);
-
-    basic.pause(10);
 }
 
 function CalculateReturn(leftSide : boolean, rightSide: boolean, fDist: number){
@@ -188,6 +186,7 @@ function StartReturn(adjustDirChanges : boolean){
 
 
 // ------- MOVEMENT
+
 function ExecuteDir(dir: Direction){
     switch (dir) {
         case Direction.left: RotateLeft(); break;

@@ -1,13 +1,10 @@
 namespace BasicMazeSolver{
 
     const minWallDist = 12;
-
-    let solve = false;
-
-    let turning = false;
-
     const servoCheckCountdown = 1000; // in ms
     const maxSpeed = 50;
+
+    let turning = false;
 
     let speed = maxSpeed;
 
@@ -17,8 +14,6 @@ namespace BasicMazeSolver{
 
     // TO DO: use fl & fr sensors
     export function Update() {
-        
-        if (!solve) { CarHandler.StopCar(); return; }
 
         let l = CarHandler.GetLeftSensorState();
         let fl = CarHandler.GetLeftFrontSensorState();
@@ -69,8 +64,6 @@ namespace BasicMazeSolver{
 
         console.log(`time: ${checkC} ${Time.deltaTime}`);
         checkC -= Time.deltaTime;
-
-        basic.pause(10);
     }
 
     /** if wall is close enought: slight left correction, othervise 90° turn */
@@ -108,15 +101,4 @@ namespace BasicMazeSolver{
     }
 
     function Measure_TryStopCar() { if (mecanumRobot.ultra() < minWallDist * 2) CarHandler.StopCar(); }
-}
-
-namespace Time{
-    export let deltaTime = 0;
-    let lastTime = 0;
-
-    export function UpdateDeltatime() {
-        let cTime = input.runningTime();
-        deltaTime = cTime - lastTime;
-        lastTime = cTime
-    }
 }

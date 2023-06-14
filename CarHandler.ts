@@ -77,7 +77,7 @@ namespace CarHandler {
     export function Rotate(angle: number) {
         StopCar();
 
-        basic.pause(100);
+        //basic.pause(100);
 
         let sp = angle < 0 ? -rotateSpeed : rotateSpeed;
         Move(sp, -sp);
@@ -97,13 +97,13 @@ namespace CarHandler {
     /// ---- --- WHEELS --- ---- \\\
     let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left];
 
-    let invert = [false, false, false, false];
+    let invert = [false, true, false, false];
     
     let minSpeedF = [16, 13, 9, 10]; // if requested speed is lower than this => 0 will be sent instead
-    let minSpeedB = [13, 10, 8, 8];
+    let minSpeedB = [13, 10, 8, 8]; // same as "minSpeedF" but is used for back direction
 
-    let maxSpeedF = [100, 85, 58, 65]; // in %
-    let maxSpeedB = [100, 85, 63, 63]; // in %
+    let maxSpeedF = [100, 94, 67, 74]; // in %
+    let maxSpeedB = [100, 94, 67, 74]; // in %
 
     function RightFrontWheel(speed: number) { SetWheel(0, speed); }
     function LeftFrontWheel(speed: number) { SetWheel(1, speed); }

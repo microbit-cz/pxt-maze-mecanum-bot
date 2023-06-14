@@ -1,4 +1,5 @@
 namespace Utils{
+    
     /** returns every currently possible direction */
     export function GetPossibleDirections(ls: boolean, rs: boolean, fDist: number, maxFDist : number): Direction[] {
         let list: Direction[] = [];
@@ -77,5 +78,16 @@ namespace Utils{
     export function RemoveDirectionsFromList(directions : Direction[], remove : Direction[]) : Direction[]{
         for (let i = 0; i < remove.length; i++) { directions.removeElement(remove[i]); }
         return directions;
+    }
+}
+
+namespace Time {
+    export let deltaTime = 0;
+    let lastTime = 0;
+
+    export function UpdateDeltatime() {
+        let cTime = input.runningTime();
+        deltaTime = cTime - lastTime;
+        lastTime = cTime
     }
 }
