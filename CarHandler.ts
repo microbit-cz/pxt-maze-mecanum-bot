@@ -1,10 +1,12 @@
 namespace CarHandler {
 
+    const enableLeds = true;
+
     let lightStripPin = DigitalPin.P8;
-    let strip = neopixel.create(lightStripPin, 4, NeoPixelMode.RGB); // 0 = left front, 1 = right front, 2 = right back, 3 = left back
+    export let strip = neopixel.create(lightStripPin, 4, NeoPixelMode.RGB); // 0 = left front, 1 = right front, 2 = right back, 3 = left back
 
     export function EnableRGBLED(led : LedCount, enable : boolean){
-        let state = enable ? LedState.ON : LedState.OFF;
+        let state = enable && enableLeds ? LedState.ON : LedState.OFF;
         mecanumRobot.setLed(led, state);
     }
 

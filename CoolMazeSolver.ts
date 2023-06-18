@@ -186,7 +186,6 @@ function StartReturn(adjustDirChanges : boolean){
 
 
 // ------- MOVEMENT
-
 function ExecuteDir(dir: Direction){
     switch (dir) {
         case Direction.left: RotateLeft(); break;
