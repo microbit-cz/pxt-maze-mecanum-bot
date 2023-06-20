@@ -8,7 +8,7 @@ const speed = 30;
 const turnPause = 700; // pause between start of rotation and execution, in micros
 const gapRegisterTime = 900; // pause between state change on any (L or R) sensor and next move calculation, in micros
 
-const minWallDist = 10; // any shorter distance to front wall that will trigger return
+const minWallDist = 10; // works only for ultrasonic, any shorter distance to front wall that will trigger return
 const correctionStrenght = 2; // strenght of correction turns when wall (on FL or FR) is detected
 
 // --- RUNTIME SETTINGS
@@ -43,8 +43,6 @@ function Update(){
     l = CarHandler.GetLeftSensorState();
     r = CarHandler.GetRightSensorState();
 
-    console.log(`${l}, ${r}`);
-
     let f = fDist < minWallDist;
 
     let leftSide = l || fl;
@@ -64,16 +62,11 @@ function Update(){
         timeToRegister = gapRegisterTime;
         recentL = l;
         recentR = r;
-
-        console.log("Updating time to register");
     }
 
     if (executeCor) ExecuteCoroutine();
 
     let goForw = true;
-
-    //console.log(`${f}, ${bSides}, ${canChangeDir}, ${canRotate}`);
-    console.log(`${timeToRegister}`);
 
     // FIX DIRECTION
     if (!f) {
@@ -96,13 +89,7 @@ function Update(){
         }
     }
     else if (canChangeDir && canRotate){
-        console.log(returning);
-        console.log(timeToRegister);
-
         if (timeToRegister <= 0 || f){
-
-            console.log("1");
-
             if (returning && pathToChange.turn == dirChanges) {
                 CalculateReturn(leftSide, rightSide, fDist);
             }

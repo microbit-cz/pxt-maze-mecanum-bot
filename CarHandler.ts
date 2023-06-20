@@ -11,10 +11,10 @@ namespace CarHandler {
     }
 
     // ---- SENSORS ----
-    let leftSensor = DigitalPin.P0;
-    let rightSensor = DigitalPin.P13;
-    let frontRightSensor = DigitalPin.P12;
-    let frontLeftSensor = DigitalPin.P7; // works only when display is disabled
+    const leftSensor = DigitalPin.P0;
+    const rightSensor = DigitalPin.P13;
+    const frontRightSensor = DigitalPin.P12;
+    const frontLeftSensor = DigitalPin.P7; // works only when display is disabled
 
     export function SetupSensors(){
         pins.setPull(leftSensor, PinPullMode.PullNone);
@@ -97,15 +97,15 @@ namespace CarHandler {
 
 
     /// ---- --- WHEELS --- ---- \\\
-    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left];
+    let wheels = [LR.Upper_right, LR.Upper_left, LR.Lower_right, LR.Lower_left]; // every wheel related array is based on this one
 
-    let invert = [false, true, false, false];
+    let invert = [false, true, false, false]; // inverts wheels speed
     
     let minSpeedF = [16, 13, 9, 10]; // if requested speed is lower than this => 0 will be sent instead
     let minSpeedB = [13, 10, 8, 8]; // same as "minSpeedF" but is used for back direction
 
-    let maxSpeedF = [100, 94, 67, 74]; // in %
-    let maxSpeedB = [100, 94, 67, 74]; // in %
+    let maxSpeedF = [100, 94, 57, 74]; // in %
+    let maxSpeedB = [100, 94, 57, 74]; // in %
 
     function RightFrontWheel(speed: number) { SetWheel(0, speed); }
     function LeftFrontWheel(speed: number) { SetWheel(1, speed); }
@@ -127,8 +127,6 @@ namespace CarHandler {
         else{
             if (fSpeed < minSpeedF[id]) fSpeed = 0;
         }
-
-        //console.log(`speed ${id} = ${fSpeed}`);
 
         mecanumRobot.Motor(wheels[id], direction, fSpeed);
     }

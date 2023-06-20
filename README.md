@@ -1,4 +1,29 @@
+# MAZE SOLVING MECANUM BOT
 
+Robot dokáře řešit bludiště pomocí dvou algoritmů:
+
+1) Sledování levé zdi
+- výhody: ----
+- limitace: nesmí obsahovat nenavazující zdi, bludiště nesmí mít "nekonečnou" levou stěnu na okraji
+
+2) 
+- výhody: je schopný zapamatovat si cestu a její optimální trasu zopakovat
+- limitace: nesmí obsahovat nenavazující zdi, šířka zdí se nesmí nijak zásadně lišit
+
+## NASTAVENÍ
+- v Main.ts je důležité nastavit typ řešení bludiště
+- v CarHanfler.ts je nutné upravit minimální a maximální rychlost motorů
+- - minimální definuje od jaké hodnoty se do motoru přestanou posílat signály
+- - podle maximální se počítá rychlost motoru pomocí funkce "Math.Map(speed, 0, 100, 0, maximální rychlost pro dané kolo)"
+
+1)
+- speed, turnPause, gapRegisterTime, minWallDist, correctionStrenght
+
+2)
+- minWallDist, servoCheckCountdown, maxSpeed
+
+
+// AUTO GENERATED
 > Open this page at [https://slattburger01.github.io/test/](https://slattburger01.github.io/test/)
 
 ## Use as Extension

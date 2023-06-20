@@ -1,15 +1,23 @@
 
 const coolMazeSolver = true;
+
+const debug = false;
+
+// ----
 let solve = false;
 
 CarHandler.SetupSensors();
 mecanumRobot.setServo(90);
 
 input.onButtonPressed(Button.A, function () {
+    if (debug) { DebugFunction(); return; }
+
     solve = !solve;
 })
 
 input.onButtonPressed(Button.B, function () {    
+    if (debug) return;
+
     executePath = !executePath;
     currentPosition = 0;
     CarHandler.EnableRGBLED(LedCount.Right, executePath);
@@ -29,3 +37,7 @@ basic.forever(function() {
 
     basic.pause(10);
 })
+
+function DebugFunction(){
+    
+}
