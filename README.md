@@ -1,18 +1,20 @@
-# MAZE SOLVING MECANUM BOT
+# MAZE SOLVING MECANUM ROBOT
+
+Limitace: bludiště musí mít zatáčky s úhlem zhruba 90° a nesmí obsahovat nenavazující zdi
 
 Robot dokáře řešit bludiště pomocí dvou algoritmů:
 
 1) Sledování levé zdi
 - výhody: ----
-- limitace: nesmí obsahovat nenavazující zdi, bludiště nesmí mít "nekonečnou" levou stěnu na okraji
+- limitace: bludiště nesmí mít "nekonečnou" levou stěnu na okraji
 
 2) 
 - výhody: je schopný zapamatovat si cestu a její optimální trasu zopakovat
-- limitace: nesmí obsahovat nenavazující zdi, šířka zdí se nesmí nijak zásadně lišit
+- limitace: šířka zdí se nesmí nijak zásadně lišit
 
 ## NASTAVENÍ
 - v Main.ts je důležité nastavit typ řešení bludiště
-- v CarHanfler.ts je nutné upravit minimální a maximální rychlost motorů
+- v CarHandler.ts je nutné upravit minimální a maximální rychlost motorů, tak aby při pohybu rovně neměnilo nijak zásadně směr 
 - - minimální definuje od jaké hodnoty se do motoru přestanou posílat signály
 - - podle maximální se počítá rychlost motoru pomocí funkce "Math.Map(speed, 0, 100, 0, maximální rychlost pro dané kolo)"
 
