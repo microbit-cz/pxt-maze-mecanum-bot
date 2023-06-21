@@ -15,7 +15,7 @@ namespace Utils{
     function GetFixedDirection(dir: Direction, basedOn: Direction): Direction {
         if (basedOn == Direction.left) {
             switch (dir) {
-                case Direction.left: return Direction.forward; // back
+                case Direction.left: return Direction.forward;
                 case Direction.forward: return Direction.right;
                 case Direction.right: return Direction.none;
             }
@@ -24,12 +24,12 @@ namespace Utils{
             switch (dir) {
                 case Direction.left: return Direction.right;
                 case Direction.right: return Direction.left;
-                case Direction.forward: return Direction.none; // back
+                case Direction.forward: return Direction.none;
             }
         }
         else if (basedOn == Direction.right) {
             switch (dir) {
-                case Direction.left: return Direction.none; // back
+                case Direction.left: return Direction.none;
                 case Direction.forward: return Direction.left;
                 case Direction.right: return Direction.forward;
             }

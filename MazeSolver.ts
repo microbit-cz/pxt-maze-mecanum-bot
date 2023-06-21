@@ -1,14 +1,15 @@
+// --- SENSORS SETTINGS ---
+// left: 1.5x size of the car
+// right: 1.2x size of the car
+
 namespace BasicMazeSolver{
 
     const minWallDist = 12;
-    const servoCheckCountdown = 1000; // in ms
     const maxSpeed = 50;
 
     let turning = false;
 
     let speed = maxSpeed;
-
-    let checkC = 0;
 
     let goForward = false;
 
@@ -18,52 +19,44 @@ namespace BasicMazeSolver{
         let l = CarHandler.GetLeftSensorState();
         let fl = CarHandler.GetLeftFrontSensorState();
         let r = CarHandler.GetRightSensorState();
-        let fr = CarHandler.GetRightFrontSensorState();
+        //let fr = CarHandler.GetRightFrontSensorState();
 
         let fDist = mecanumRobot.ultra();
         let f = true; // go forward
 
-        if (l) turning = false;
+        if (l)
+        { 
+            turning = false;
+            speed = maxSpeed;
+        }
 
         if (fDist < minWallDist) {
-            console.log("rotate");
-
-            if (l || fl) CarHandler.RotateRight(90);
+            
+            if (l) CarHandler.RotateRight(90);
             else if (r && l) CarHandler.RotateLeft(180);
             else CarHandler.RotateLeft(90);
 
             f = false;
         }
         else {
-            if (fl || l) speed = maxSpeed;
+            //if (fl || l) speed = maxSpeed;
 
-            if (fl) {
-                console.log("right turn");
-                CarHandler.RightTurn(speed, 4);
-                f = false;
-            }
-            else if (!fl && !l && !turning && checkC <= 0) {
+            f = false;
+
+            if (fl) CarHandler.RightTurn(speed, 4);
+            else if (!fl && !l && !turning) {
                 speed = maxSpeed / 2;
                 if (goForward) CarHandler.GoForward(speed);
                 ReturnToLeftWall();
-                f = false;
             }
-            else if (!l) {
-                console.log("left turn");
-                CarHandler.LeftTurn(speed, 2);
-                f = false;
-            }
+            else if (!l) CarHandler.LeftTurn(speed, 2);
+            
+            else f = true;
         }
 
-        if (f) {
-            console.log("Forward")
-            CarHandler.GoForward(speed);
-        }
+        if (f) CarHandler.GoForward(speed);
 
         goForward = f;
-
-        console.log(`time: ${checkC} ${Time.deltaTime}`);
-        checkC -= Time.deltaTime;
     }
 
     /** if wall is close enought: slight left correction, othervise 90° turn */
@@ -75,10 +68,8 @@ namespace BasicMazeSolver{
         }
         else {
             speed = maxSpeed;
-            CarHandler.LeftTurn(speed, 8);
+            CarHandler.RotateLeft(30);
         }
-
-        checkC = servoCheckCountdown;
     }
 
     const turnTime = 350;

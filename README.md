@@ -8,21 +8,10 @@ Robot dokáře řešit bludiště pomocí dvou algoritmů:
 - výhody: ----
 - limitace: bludiště nesmí mít "nekonečnou" levou stěnu na okraji
 
-2) 
-- výhody: je schopný zapamatovat si cestu a její optimální trasu zopakovat
+2) Depth-First Search
+- výhody: je schopný zapamatovat si cestu a její nejkratší variantu zopakovat
+- nevýhody: najde pouze 1. možné řešení bludiště
 - limitace: šířka zdí se nesmí nijak zásadně lišit
-
-## NASTAVENÍ
-- v Main.ts je důležité nastavit typ řešení bludiště
-- v CarHandler.ts je nutné upravit minimální a maximální rychlost motorů, tak aby při pohybu rovně neměnilo nijak zásadně směr 
-- - minimální definuje od jaké hodnoty se do motoru přestanou posílat signály
-- - podle maximální se počítá rychlost motoru pomocí funkce "Math.Map(speed, 0, 100, 0, maximální rychlost pro dané kolo)"
-
-1)
-- speed, turnPause, gapRegisterTime, minWallDist, correctionStrenght
-
-2)
-- minWallDist, servoCheckCountdown, maxSpeed
 
 
 // AUTO GENERATED

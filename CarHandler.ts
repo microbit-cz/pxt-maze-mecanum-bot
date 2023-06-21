@@ -53,22 +53,8 @@ namespace CarHandler {
         LeftBackWheel(lSpeed);
     }
 
-    export function Test(){
-        for(let i = 0; i < wheels.length; i++) TestWheel(i);
-    }
-
-    function TestWheel(wheel : number){
-        for (let i = 0; i < 8; i++) {
-            let sp = i % 2 === 0 ? 100 : - 100;
-            SetWheel(wheel, sp);
-            basic.pause(500);
-        }
-
-        SetWheel(wheel, 0);
-    }
-
     // ROTATION
-    const defAngleTime = 1150; // prev = 750 // how long does it take to rotate 180° at "rotateSpeed" in ms
+    const defAngleTime = 1030; // prev = 750 // how long does it take to rotate 180° at "rotateSpeed" in ms
     const rotateSpeed = 80; // -100 -> 100
 
     export function RotateRight(angle: number) { Rotate(-angle); }
@@ -78,8 +64,6 @@ namespace CarHandler {
     /** positive angle = left, negative angle = right */
     export function Rotate(angle: number) {
         StopCar();
-
-        //basic.pause(100);
 
         let sp = angle < 0 ? -rotateSpeed : rotateSpeed;
         Move(sp, -sp);
@@ -104,8 +88,8 @@ namespace CarHandler {
     let minSpeedF = [16, 13, 9, 10]; // if requested speed is lower than this => 0 will be sent instead
     let minSpeedB = [13, 10, 8, 8]; // same as "minSpeedF" but is used for back direction
 
-    let maxSpeedF = [100, 94, 57, 74]; // in %
-    let maxSpeedB = [100, 94, 57, 74]; // in %
+    let maxSpeedF = [100, 94, 57, 74]; // forward, in %
+    let maxSpeedB = [100, 94, 57, 74]; // backward, in %
 
     function RightFrontWheel(speed: number) { SetWheel(0, speed); }
     function LeftFrontWheel(speed: number) { SetWheel(1, speed); }
@@ -121,12 +105,15 @@ namespace CarHandler {
 
         let fSpeed = Math.map(Math.abs(speed), 0, 100, 0, mSp);
 
-        if (speed < 0){
+        /*if (speed < 0) {
             if (fSpeed < minSpeedB[id]) fSpeed = 0;
         }
-        else{
+        else {
             if (fSpeed < minSpeedF[id]) fSpeed = 0;
-        }
+        }*/
+
+        let minSpeed = speed < 0 ? minSpeedB[id] : minSpeedF[id];
+        if (fSpeed < minSpeed) fSpeed = 0;
 
         mecanumRobot.Motor(wheels[id], direction, fSpeed);
     }

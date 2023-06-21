@@ -3,7 +3,7 @@
 // front left and front right: bit shorter that distance to the wall (neither of them has contact if car is correctly rotated in the middle)
 // min wall dist has to have higher range that fl & fr (in forward direction)
 
-// SETTINGS
+// --- SETTINGS ---
 const speed = 30;
 const turnPause = 700; // pause between start of rotation and execution, in micros
 const gapRegisterTime = 900; // pause between state change on any (L or R) sensor and next move calculation, in micros
@@ -11,10 +11,10 @@ const gapRegisterTime = 900; // pause between state change on any (L or R) senso
 const minWallDist = 10; // works only for ultrasonic, any shorter distance to front wall that will trigger return
 const correctionStrenght = 2; // strenght of correction turns when wall (on FL or FR) is detected
 
-// --- RUNTIME SETTINGS
+// --- RUNTIME SETTINGS ---
 let executePath = false;
 
-// RUNTIME DATA
+// --- RUNTIME DATA ---
 let currentPosition = 0; // array id for path executing
 
 let crosses : MazePart[] = [];
