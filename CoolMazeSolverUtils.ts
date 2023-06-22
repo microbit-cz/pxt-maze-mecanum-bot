@@ -1,5 +1,8 @@
 namespace Utils{
     
+    // normal direction = direction based on entry point
+    // local direction = direction based on car rotation
+
     /** returns every currently possible direction */
     export function GetPossibleDirections(ls: boolean, rs: boolean, fDist: number, maxFDist : number): Direction[] {
         let list: Direction[] = [];
