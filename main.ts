@@ -18,9 +18,9 @@ input.onButtonPressed(Button.A, function () {
 input.onButtonPressed(Button.B, function () {    
     if (debug) return;
 
-    executePath = !executePath;
-    currentPosition = 0;
-    CarHandler.EnableRGBLED(LedCount.Right, executePath);
+    CoolMazeSolver.executePath = !CoolMazeSolver.executePath;
+    CoolMazeSolver.currentPosition = 0;
+    CarHandler.EnableRGBLED(LedCount.Right, CoolMazeSolver.executePath);
 })
 
 input.onButtonPressed(Button.AB, function(){
@@ -32,7 +32,7 @@ basic.forever(function() {
 
     Time.UpdateDeltatime();
 
-    if (coolMazeSolver) Update();
+    if (coolMazeSolver) CoolMazeSolver.Update();
     else BasicMazeSolver.Update();
 
     basic.pause(10);
